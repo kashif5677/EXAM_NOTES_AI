@@ -11,6 +11,9 @@ import creditRouter from "./routes/credits.route.js"
 import { stripeWebhook } from "./controllers/credits.controller.js"
 dotenv.config()
 
+
+
+
 const app = express()
 
 app.post(
@@ -19,13 +22,16 @@ app.post(
     stripeWebhook
 );
 
-app.use(cors(
-    {
-        origin: "https://exam-notes-ai-client-o2o0.onrender.com",
-        credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    }
-))
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "https://exam-notes-ai-client-o2o0.onrender.com"
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+}))
+
+
 
 app.use(express.json())
 app.use(cookieParser())
@@ -38,7 +44,9 @@ app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
 app.use("/api/notes", notesRouter)
 app.use("/api/pdf", pdfRouter)
-app.use("/api/credit", creditRouter)
+app.use("/api/credits", creditRouter)
+
+
 
 app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`)
