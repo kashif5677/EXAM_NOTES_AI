@@ -1,34 +1,41 @@
 import mongoose from "mongoose";
-const notesSchema = new mongoose.Schema({
-     user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "UserModel",
-      required: true
+
+const notesSchema = new mongoose.Schema(
+    {
+
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "UserModel",
+            required: true
+        },
+        topic: {
+            type: String,
+            required: true
+        },
+        classLevel: {
+            type: String,
+            default: ""
+        },
+        examType: {
+            type: String,
+            default: ""
+        },
+        revisionMode: {
+            type: Boolean,
+            default: false
+        },
+        includeDiagram: Boolean,
+        includeChart: Boolean,
+
+        content: {
+            type: mongoose.Schema.Types.Mixed,
+            required: true
+        },
     },
+    {
+        timestamps: true,
+    });
 
-    topic: {
-      type: String,
-      required: true
-    },
-
-    classLevel: String,
-    examType: String,
-
-    revisionMode: {
-      type: Boolean,
-      default: false
-    },
-
-    includeDiagram: Boolean,
-    includeChart: Boolean,
-
-    content: {
-      type: mongoose.Schema.Types.Mixed, // AI response (string / JSON)
-      required: true
-    }
-
-},{timestamps:true})
-
-const Notes = mongoose.model("Notes" , notesSchema)
+const Notes = mongoose.model("Notes", notesSchema)
 
 export default Notes

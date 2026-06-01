@@ -1,47 +1,33 @@
+
 import axios from "axios"
-import { serverUrl } from "../App"
-import { setUserData } from "../redux/userSlice"
+import { setUserData } from "../redux/userSlice.js"
+import { serverUrl } from "../App.jsx";
 
 export const getCurrentUser = async (dispatch) => {
     try {
-        const result = await axios.get(serverUrl + "/api/user/currentuser", { withCredentials: true })
-
+        const result = await axios.get(serverUrl + "/api/user/currentuser", {
+            withCredentials: true
+        })
+        console.log(result.data);
         dispatch(setUserData(result.data))
     } catch (error) {
-        console.log(error)
+        console.error(error.response?.status);
+        console.error(error.response?.data);
+        console.error(error.message);
+        // Don't throw - user just not authenticated, that's ok
+        if (error.response?.status === 401) {
+            dispatch(setUserData(null))
+        }
     }
 }
 
 export const generateNotes = async (payload) => {
     try {
         const result = await axios.post(serverUrl + "/api/notes/generate-notes", payload, { withCredentials: true })
-        console.log(result.data)
+        console.log(result.data);
         return result.data
-
     } catch (error) {
-        console.log(error)
-    }
-}
-
-export const downloadPdf = async (result) => {
-    try {
-        const response = await axios.post(serverUrl + "/api/pdf/generate-pdf", { result }, {
-            responseType: "blob", withCredentials: true
-        })
-
-        const blob = new Blob([response.data], {
-            type: "application/pdf"
-        });
-
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "ExamNotesAI.pdf";
-        link.click();
-
-        window.URL.revokeObjectURL(url);
-    } catch (error) {
-        throw new Error("PDF download failed");
-
+        console.log(error);
+        throw error
     }
 }

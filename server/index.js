@@ -1,54 +1,36 @@
-import express from "express"
+﻿import express from "express";
 import dotenv from "dotenv"
-import connectDb from "./utils/connectDb.js"
-import authRouter from "./routes/auth.route.js"
-import cookieParser from "cookie-parser"
+import connectDB from "./utlis/connectDB.js";
+import authRouter from "./routes/auth.route.js";
+import cookieParser from "cookie-parser";
 import cors from "cors"
-import userRouter from "./routes/user.route.js"
-import notesRouter from "./routes/genrate.route.js"
-import pdfRouter from "./routes/pdf.route.js"
-import creditRouter from "./routes/credits.route.js"
-import { stripeWebhook } from "./controllers/credits.controller.js"
+import userRouter from "./routes/user.routes.js";
+import notesRouter from "./routes/generate.routes.js";
 dotenv.config()
-
-
-
 
 const app = express()
 
-app.post(
-    "/api/credits/webhook",
-    express.raw({ type: "application/json" }),
-    stripeWebhook
-);
-
-app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        "https://exam-notes-ai-client-o2o0.onrender.com"
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-}))
-
-
+app.use(cors(
+    {
+        origin: 'http://localhost:5173',
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    }
+))
 
 app.use(express.json())
 app.use(cookieParser())
-const PORT = process.env.PORT || 5000
-app.get("/", (req, res) => {
-    res.json({ message: "ExamNotes AI Backend Running 🚀" })
-
+const port = process.env.PORT || 3000
+app.get('/', (req, res) => {
+    res.json({ message: 'Hello World!' })
 })
-app.use("/api/auth", authRouter)
-app.use("/api/user", userRouter)
-app.use("/api/notes", notesRouter)
-app.use("/api/pdf", pdfRouter)
-app.use("/api/credits", creditRouter)
 
+//routes   
+app.use('/api/auth', authRouter)
+app.use('/api/user', userRouter)
+app.use('/api/notes', notesRouter)
 
-
-app.listen(PORT, () => {
-    console.log(`✅ Server running on port ${PORT}`)
-    connectDb()
+app.listen(port, () => {
+    connectDB()
+    console.log(`Example app listening on port ${port}`)
 })
